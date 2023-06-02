@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Excel Data Reader</title>
+  <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+  <script>
+    function handleFile() {
+      var file = "data.xlsx";
+      
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', file, true);
+      xhr.responseType = 'arraybuffer';
+      
+      xhr.onload = function (e) {
+        if (xhr.status === 200) {
+          var data = new Uint8Array(xhr.response);
+          var workbook = XLSX.read(data, { type: 'array' });
+          var sheetName = workbook.SheetNames[0];
+          var worksheet = workbook.Sheets[sheetName];
+          var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+          console.log(jsonData); // Output the parsed data to the console
+        }
+      };
+      
+      xhr.send();
+    }
+  </script>
+</head>
+<body>
+  <script>handleFile();</script>
+</body>
+</html>
